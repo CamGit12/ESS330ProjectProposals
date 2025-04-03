@@ -1,7 +1,12 @@
 ---
 title: "index"
-format: html
-editor: visual
+format:
+   html:
+	code-fold: true
+	toc: true
+	self-contained: true
+execute:
+  echo: true
 ---
 
 
