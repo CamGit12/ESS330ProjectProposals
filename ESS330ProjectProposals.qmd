@@ -1,12 +1,23 @@
 ---
-title: "index"
+title: ESS330_ProjProposals
+authors:
+  - name: Cameron McLaughlin
+    affiliation: The University
+    roles: writing
+    corresponding: true
+  - name: Alex Smilor
+    affiliation: The University
+    roles: writing
+    corresponding: false
+bibliography: references.bib
+csl: apa.csl
 format:
-   html:
-	code-fold: true
-	toc: true
-	self-contained: true
-execute:
-  echo: true
+  html:
+    embed-resources: true
+    execute:
+      echo: true
+      warning: false
+      message: false
 ---
 
 # Section 3
@@ -52,7 +63,7 @@ turbidity_clean <- raw_turbidity %>%
 joined_data <- inner_join(discharge_clean, turbidity_clean, by = "dateTime")
 ```
 
-Our data is directly imported using the USGS dataRetrieval tool. Our data comes in directly through this tool as a csv, with various non-human readable column names. This code elimiates many of the unnecessary columsns such as agency, site number, time zone, etc. Additionally, we have implemented renaming to name the correct parameter columns with their appropriate titles and units, Ultimately, our two dataframe with our two parameters needed to be joined so that we can run initial analyses and visualizations to inspect our complete dataset. 
+Our data is directly imported using the USGS dataRetrieval tool. Our data comes in directly through this tool as a csv, with various non-human readable column names. This code eliminates many of the unnecessary columns such as agency, site number, time zone, etc. Additionally, we have implemented renaming to name the correct parameter columns with their appropriate titles and units, Ultimately, our two dataframe with our two parameters needed to be joined so that we can run initial analyses and visualizations to inspect our complete dataset. 
 
 ### Initial Vis and EDA
 
@@ -93,6 +104,8 @@ print(kstest_turb)
 For our initial visualizations, we have plotted both parameters (discharge and turbidity) on the same plot, allowing us to visually interpret our data, and initially analyze whether there is correlation between our streamflow (Q) and turbidity levels. Additionally, in order to visually assess the distribution of our data, we made histograms which demonstrated very strong right skewing in both parameters, indicating that we should test for normality and likely keep the normality of our data in mind for future analyses. Our Kolmogorov test was a solution we found to our dataset being very large, resulting in needing this test to determine if our data was normal. Our results indicating the strong right skew (non-normal) we expected from our previous plots (p values < 2.2e-16). 
 
 ## Stat Test
+##r_sq <- summary(lm_discharge)$r.squared
+## print(r_sq)
 
 ```{r}
 #perform spearmans rank corr test
@@ -100,11 +113,10 @@ spearman_corr <- cor.test(joined_data$discharge_cfs, joined_data$turbidity_fbu, 
 
 #linear regression on both parameters
 lm <- lm(discharge_cfs ~ turbidity_fbu, data = joined_data)
-r_sq <- summary(lm_discharge)$r.squared
 
 print(spearman_corr)
 print("r squared")
-print(r_sq)
+
 print(lm)
 ```
 For our final investigations into our data, we have ran initial tests for correlation via Spearman's (non-normal dist. assumed) and a linear regression as well. Our results indicated that there is certainly correlation between our two parameters, but that the relationship is not linear. 
