@@ -1,3 +1,6 @@
 project:
   type: manuscript
   output-dir: docs
+format:
+  html:
+    self-contained: true

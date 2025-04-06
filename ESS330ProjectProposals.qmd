@@ -20,7 +20,23 @@ format:
       message: false
 ---
 
-# Section 3
+# Lab 7 Project Kickoff
+
+## Github: CamGit12/ESS330ProjectProposals
+
+### Title: Elwha River - Glines Canyon Dam Removal Effects; Turbidity and Discharge
+
+### Introduction, Background, Motivation
+
+Dams have long been built by humans as a means of protecting human development from flooding, diverting water for crop irrigation or, in modern times, to generate power to meet the growing energy demands of an industrialized world [@ryanbellmore_2016_status]. In the United States, there are estimated to be over 2 million dams throughout the country, though many of these are small in size and aging [@graf1993sustaining, @ryanbellmore_2016_status]. Many of the dams in the US are currently over 50 years old and, this age combined with shifts in scientific knowledge and societal values, have promoted the popularity of dam removal as an option for these aging dams [duda2008baseline, @ryanbellmore_2016_status]. While dam removal is often done for economic reasons, since the cost of repairing dams can be prohibitively expensive, it has also recently gained popularity as a valuable method for restoring riverine ecosystems [duda2008baseline, @ryanbellmore_2016_status]. For these reasons and more, the US has recently seen the removal of over 1000 dams in recent decades, though the effects of these dam removal on riverine ecosystems generally go unstudied [@ryanbellmore_2016_status].
+
+Though river restoration is often one of the goals of dam removal, especially in recent years, the consequences of dam removal are nuanced, with both benefits and costs that must be considered prior to and following dam removal efforts [@duda2008baseline]. Dam removal is known to have impacts on the physical and biological properties of river systems, with potential consequences for river health, human health, local economy and biodiversity. Removing dams can often serve as an important step in reconnecting riparian habitats, allowing for the flooding of wetlands and creating a more complex and better connected riparian habitat matrix that can benefit some species such as wide ranging terrestrial species and species reliant on the presence of ephemeral water bodies [@bednarek2001undamming]. Dam removal can also improve the connectivity of aquatic habitats, allowing fish and aquatic invertebrates to travel freely up and downstream, often benefiting migratory fish such as salmon [@bednarek2001undamming]. Physical properties, such as temperature, are also often affected by dam removal. Dams often lead to a decrease in water temperature downstream of the river, since many dams draw water from the cooler depths of their reservoirs [@bednarek2001undamming]. Removal, therefore, is often an effective method of restoring river water temperatures to their natural state. Additionally, sediment transport often changes following dam removal as previously trapped sediment is released. However, how sediment transport changes is highly variable, with some streams seeing increases in sediment mobilization immediately following dam removal and others not seeing much mobilization until months following removal [@bednarek2001undamming, @simons1991sediment, @johnson2001kettle].
+
+This project will focus on the sediment flows following one of the largest dam removal projects in the United States. The Elwha River, located in northern Washington in Olympic National Park upstream of the Strait of Juan de Fuca, saw the removal of two large dams between 2011 and 2012, which at the time represented the largest dam removal and river restoration project in US history [@duda2011coastal]. As part of these dam removal projects and to aid in river restoration assessment, extensive monitoring efforts of flow conditions and water quality metrics were undertaken, with the goal of better understanding how dam removal on this scale affects watershed health. As a result, a uniquely high amount of research was produced in relation to this project, providing a unique opportunity to study the ongoing effects of such a monumental project [@RANDLE2015709]. In fact, there were many researchers focused on the geomorphic responses to these dam removals [@10.3955/0029-344X-82.S.I.236], but the need for continued analyses to ongoing changes and better understandings of the dynamic impacts to water quality as a result of the dam removal impacts remains.
+
+This project will look to assist in the maintained study of the dual-dam removal on the Elwha River and the water quality dynamics that occurred downstream, specifically by examining the relationship between upstream peak daily discharge and downstream daily turbidity measures. Turbidity, or the amount of suspended particles is important to investigate due to the high potential for increased sediment flow following dam removal, which could impact water quality further downstream as massive amounts of sediment are released from behind the dams and bring potentially harmful pollutants with them [@hart2002dam]. In the case of the Elwha river dams, there was an estimated 19 million m3 of sediment trapped behind both dams combined, making the potential water quality impacts high [@duda2011coastal]. Beyond the potential water quality impacts, turbidity can also have negative impacts on biota, specifically migratory fish species, with turbidity negatively associated with salmon swimming speed [@lehman_2017_relationships]. Given that reconnecting salmon and trout runs was one of the key goals of this project, understanding potential challenges associated with dam removal is important for both achieving project goals and learning how best these effects can be managed [@duda2011coastal].
+
+This project will draw from two data sources, upstream river discharge USGS gauge (Elwha River at Mcdonald BR Near Port Angeles, WA, 12045500) and downstream river water quality USGS gauge (Elwha River at Diversion Near Port Angeles, WA, 12046260). The two variables we will be testing against each other will be Daily Peak Discharge and Daily Peak Turbidity. To test whether or not there is a relationship between these two variables, we will use a Kolmogorov-Smirnov test, since our dataset is not normally distributed and the data set is large [@mishra2019descriptive].
 
 ## EDA
 
@@ -63,9 +79,9 @@ turbidity_clean <- raw_turbidity %>%
 joined_data <- inner_join(discharge_clean, turbidity_clean, by = "dateTime")
 ```
 
-Our data is directly imported using the USGS dataRetrieval tool. Our data comes in directly through this tool as a csv, with various non-human readable column names. This code eliminates many of the unnecessary columns such as agency, site number, time zone, etc. Additionally, we have implemented renaming to name the correct parameter columns with their appropriate titles and units, Ultimately, our two dataframe with our two parameters needed to be joined so that we can run initial analyses and visualizations to inspect our complete dataset. 
+Our data is directly imported using the USGS dataRetrieval tool. Our data comes in directly through this tool as a csv, with various non-human readable column names. This code eliminates many of the unnecessary columns such as agency, site number, time zone, etc. Additionally, we have implemented renaming to name the correct parameter columns with their appropriate titles and units, Ultimately, our two dataframe with our two parameters needed to be joined so that we can run initial analyses and visualizations to inspect our complete dataset.
 
-### Initial Vis and EDA
+### Initial Visualizations and EDA
 
 ```{r}
 #Both Parameters Plotted, discharge Y-left, Turbidity Y-right
@@ -101,11 +117,11 @@ print(kstest_Q)
 print(kstest_turb)
 ```
 
-For our initial visualizations, we have plotted both parameters (discharge and turbidity) on the same plot, allowing us to visually interpret our data, and initially analyze whether there is correlation between our streamflow (Q) and turbidity levels. Additionally, in order to visually assess the distribution of our data, we made histograms which demonstrated very strong right skewing in both parameters, indicating that we should test for normality and likely keep the normality of our data in mind for future analyses. Our Kolmogorov test was a solution we found to our dataset being very large, resulting in needing this test to determine if our data was normal. Our results indicating the strong right skew (non-normal) we expected from our previous plots (p values < 2.2e-16). 
+For our initial visualizations, we have plotted both parameters (discharge and turbidity) on the same plot, allowing us to visually interpret our data, and initially analyze whether there is correlation between our streamflow (Q) and turbidity levels. Additionally, in order to visually assess the distribution of our data, we made histograms which demonstrated very strong right skewing in both parameters, indicating that we should test for normality and likely keep the normality of our data in mind for future analyses. Our Kolmogorov test was a solution we found to our dataset being very large, resulting in needing this test to determine if our data was normal. Our results indicating the strong right skew (non-normal) we expected from our previous plots (p values \< 2.2e-16).
 
 ## Stat Test
-##r_sq <- summary(lm_discharge)$r.squared
-## print(r_sq)
+
+##r_sq \<- summary(lm_discharge)\$r.squared \## print(r_sq)
 
 ```{r}
 #perform spearmans rank corr test
@@ -119,26 +135,19 @@ print("r squared")
 
 print(lm)
 ```
-For our final investigations into our data, we have ran initial tests for correlation via Spearman's (non-normal dist. assumed) and a linear regression as well. Our results indicated that there is certainly correlation between our two parameters, but that the relationship is not linear. 
 
-# Section 4
+For our final investigations into our data, we have ran initial tests for correlation via Spearman's (non-normal dist. assumed) and a linear regression as well. Our results indicated that there is certainly correlation between our two parameters, but that the relationship is not linear.
 
-## Prelim Methods
+## Preliminary Methods
 
-1.) Identify your preliminary methods
-Our preliminary methods, as seen above, are EDA and then initial tests of Spearman's Correlation and Linear Regression in order to initially determine if there is a relationship between our two parameters. Further into our work we will be looking to integrate time into our perspectives and analyses, which will allow us to better understand how closely related our two parameters are as well as how closely they are linked on a temporal scale. One of our ideas for investigating this would be to test how time as affected turbidity after the dam removal, which would allow us to better visualize and understand how sediments are being transported from the reservoir downstream, and how this process is changing as time moves on after the removal. 
+1.) Identify your preliminary methods Our preliminary methods, as seen above, are EDA and then initial tests of Spearman's Correlation and Linear Regression in order to initially determine if there is a relationship between our two parameters. Further into our work we will be looking to integrate time into our perspectives and analyses, which will allow us to better understand how closely related our two parameters are as well as how closely they are linked on a temporal scale. One of our ideas for investigating this would be to test how time as affected turbidity after the dam removal, which would allow us to better visualize and understand how sediments are being transported from the reservoir downstream, and how this process is changing as time moves on after the removal.
 
-2.) What are you thinking about using to analyze your data to answer your question?
-We are still working on determining our statistical methods but we are certain one of our next steps in analysis should be to determine th relationship of time and turbidity, controlling for discharge. This will allow us to better understand how turbidity continues to change post dam-removal. 
+2.) What are you thinking about using to analyze your data to answer your question? We are still working on determining our statistical methods but we are certain one of our next steps in analysis should be to determine th relationship of time and turbidity, controlling for discharge. This will allow us to better understand how turbidity continues to change post dam-removal.
 
-3.) Do you have everything you need? What supplemental data might you need?
-Unfortunately our study is very specific case-wise, so there is no more available data within this watershed relating to the period of the dam removal, but there is a possibility we could integrated parallel data for other dam removals if we were able to find appropriate data. 
+3.) Do you have everything you need? What supplemental data might you need? Unfortunately our study is very specific case-wise, so there is no more available data within this watershed relating to the period of the dam removal, but there is a possibility we could integrated parallel data for other dam removals if we were able to find appropriate data.
 
-4.) What are some potential challenges you see in the data?
-One issue we have found in our data so far is that the period of record for our discharge and turbidity are relatively short on the timescale of the dam removal. Ideally we would have captured turbidity levels before, during, and after the dam removal so that we could additionally analyse geomorphology regime changes but unfortunately this was not possible. 
+4.) What are some potential challenges you see in the data? One issue we have found in our data so far is that the period of record for our discharge and turbidity are relatively short on the timescale of the dam removal. Ideally we would have captured turbidity levels before, during, and after the dam removal so that we could additionally analyse geomorphology regime changes but unfortunately this was not possible.
 
-5.) What are some potential challenges you see in the methods?
-One challenge we have already found when investigating our data initially is that we have pairs in our data that is complicating our Spearman's rank correlation test. This has caused problems because it complicates the Spearman's correlation resulting p value into a estimation. In this way, we may need to find a different correlation method to use if this is a big enough issue.
+5.) What are some potential challenges you see in the methods? One challenge we have already found when investigating our data initially is that we have pairs in our data that is complicating our Spearman's rank correlation test. This has caused problems because it complicates the Spearman's correlation resulting p value into a estimation. In this way, we may need to find a different correlation method to use if this is a big enough issue.
 
-6.) How do the selected methods help you get to your final goal?
-Ultimately our selected methods allow us to get further by describing and enlightening the relationship between discharge and turbidity levels in the Elwha River specifically below the Glines Canyon Dam Removal site. The analyses and plans we have will allow us to investigate how the relationship works, how it has changed, and how time has impacted this relationship post-dam removal. 
+6.) How do the selected methods help you get to your final goal? Ultimately our selected methods allow us to get further by describing and enlightening the relationship between discharge and turbidity levels in the Elwha River specifically below the Glines Canyon Dam Removal site. The analyses and plans we have will allow us to investigate how the relationship works, how it has changed, and how time has impacted this relationship post-dam removal.
