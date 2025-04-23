@@ -53,6 +53,14 @@ library(readr)
 library(ggpubr)
 library(tidyverse)
 library(plotly)
+library(tsibble)
+library(forecast)
+library(feasts)
+library(modeltime)
+library(timeSeries)
+library(timetk)
+library(tidymodels)
+library(earth)
 ```
 
 ### Clean and Prep Data
@@ -69,7 +77,7 @@ turbidity_clean <- raw_turbidity %>%
   rename(turbidity_fbu = X_63682_00000) %>% 
   select(-agency_cd, -site_no, -tz_cd, -X_63682_00000_cd)
 
-  discharge_clean <- raw_discharge %>%
+discharge_clean <- raw_discharge %>%
   rename(discharge_cfs = X_00060_00000) %>% 
     select(-agency_cd, -site_no, -tz_cd, -X_00060_00000_cd)
 
@@ -151,3 +159,167 @@ For our final investigations into our data, we have ran initial tests for correl
 5.) What are some potential challenges you see in the methods? One challenge we have already found when investigating our data initially is that we have pairs in our data that is complicating our Spearman's rank correlation test. This has caused problems because it complicates the Spearman's correlation resulting p value into a estimation. In this way, we may need to find a different correlation method to use if this is a big enough issue.
 
 6.) How do the selected methods help you get to your final goal? Ultimately our selected methods allow us to get further by describing and enlightening the relationship between discharge and turbidity levels in the Elwha River specifically below the Glines Canyon Dam Removal site. The analyses and plans we have will allow us to investigate how the relationship works, how it has changed, and how time has impacted this relationship post-dam removal.
+
+```{r}
+monthdata <- joined_data %>% 
+  mutate(Date = yearmonth(dateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(discharge_cfs = mean(discharge_cfs),
+            turbidity_fbu = mean(turbidity_fbu))
+
+elwha_tbl <- as_tsibble(monthdata)
+
+elwha_tsplot <- elwha_tbl %>% 
+  ggplot(aes(x = Date)) +
+  geom_line(aes(y = discharge_cfs, color = "Discharge")) +
+  geom_line(aes(y = turbidity_fbu, color = "Turbidity")) +
+  scale_y_continuous(name = "Discharge (cfs)", sec.axis = sec_axis(~ ., name = "Turbidity (FBU)")) + 
+  labs(
+    color = "",
+    x = "Date"
+  )
+
+ggplotly(elwha_tsplot)
+
+gg_subseries(elwha_tbl, y = turbidity_fbu)+
+  labs(title = "Monthly Turbity Patterns", y = "Turbidity (FBU)", x = "Year") + 
+  theme_minimal()
+
+gg_subseries(elwha_tbl, y = discharge_cfs)+
+  labs(title = "Monthly Flow Patterns", y = "Discharge (CFS)", x = "Year") + 
+  theme_minimal()
+
+flow_decomp <- elwha_tbl %>% 
+model(STL(discharge_cfs ~ season(window = 12))) %>% 
+  components()
+
+turbid_decomp <- elwha_tbl %>% 
+model(STL(turbidity_fbu ~ season(window = 12))) %>% 
+  components()
+
+autoplot(flow_decomp) +
+  labs(title = "STL Decomposition of Flow", y = "Cubic Feet per Second") +
+  theme_minimal()
+
+autoplot(turbid_decomp) +
+  labs(title = "STL Decomposition of Turbidity", y = "FBU") +
+  theme_minimal()
+
+flow_lm<- lm(trend ~ Date, data = flow_decomp)
+summary(flow_lm)
+turbid_lm<- lm(trend ~ Date, data = turbid_decomp)
+summary(turbid_lm)
+
+#Reversing dataset to facilitate hindcasting. Basic plan is to just flip the data to forecast backwards
+hindcast<- discharge_clean
+
+#hindcast$dateTime <- rev(hindcast$dateTime) #Don't use, might not be needed
+hindcast$discharge_cfs <- rev(hindcast$discharge_cfs) #reverses discharge data
+#hindcast$turbidity_fbu <- rev(hindcast$turbidity_fbu) #reverses turbidity date
+
+hindcast_daily <- hindcast %>% 
+  mutate(Date = date(dateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(Flow = mean(discharge_cfs))
+
+#Modeling Prep
+set.seed(100)
+ts_tbl <-  tsibble::as_tsibble(hindcast_daily) |> 
+  as_tibble()
+
+splits <- time_series_split(ts_tbl, assess = "36 months", cumulative = TRUE)
+
+training <-  training(splits)
+testing  <-  testing(splits)
+
+mods <- list(
+  prophet_boost(seasonality_daily = TRUE) |> set_engine("prophet_xgboost")
+)
+
+dis_models <- map(mods, ~ fit(.x, Flow ~ Date, data = training))
+
+
+(dis_models_tbl <- as_modeltime_table(dis_models))
+
+(calibration_table <- modeltime_calibrate(dis_models_tbl, testing, quiet = FALSE))
+
+modeltime_accuracy(calibration_table) |> 
+  arrange(mae)
+
+(forecast <- calibration_table  |> 
+  modeltime_forecast(h = "36 months", 
+                     new_data = testing,
+                     actual_data = ts_tbl))
+plot_modeltime_forecast(forecast)
+
+refit_tbl <- calibration_table |>
+    modeltime_refit(data = ts_tbl)
+
+refit_tbl |>
+    modeltime_forecast(h = "36 months", actual_data = ts_tbl) |>
+    plot_modeltime_forecast()
+
+refit_forecast <- refit_tbl |>
+    modeltime_forecast(h = "36 months", actual_data = ts_tbl)
+
+elwha_past <- readNWISuv("12045500", "00060", startDate = "2010-09-18", endDate = "2019-12-19", tz = "UTC") %>% 
+  rename(Flow = X_00060_00000, Date = dateTime) %>% 
+  mutate(Date = date(Date)) |>                   
+  group_by(Date) |>                                   
+  summarise(Flow = mean(Flow))
+
+forecast2 <- rename(refit_forecast, Date = .index)
+forecast2 <- rename(forecast2, Flow = .value)
+
+rev_hindcast <- forecast2 %>%
+  group_by(Date) %>% 
+  summarise(Flow = Flow)
+
+rev_hindcast$Flow <- rev(rev_hindcast$Flow)
+  
+rev_hindcast <- rev_hindcast %>% 
+  mutate(trueDate = Date - 1096)
+
+
+ggplot() +
+  geom_line(data = rev_hindcast, aes(x=trueDate, y = Flow, color = "Predicted")) +
+  geom_line(data = elwha_past, aes(x=Date, y = Flow, color = "Actual")) + 
+  theme_minimal() + 
+  labs(
+    x = "Month",
+    y = "Flow (Cubic Feet per Second)",
+    color = ""
+  )
+
+hindcast_plot <- forecast2 %>%
+  select(.model_desc,Flow,Date) %>% 
+  rename(model = .model_desc)
+
+hindcast_plot$Flow <- rev(hindcast_plot$Flow)
+hindcast_plot$model <- rev(hindcast_plot$model)
+
+hindcast_merge <- hindcast_plot %>% 
+  mutate(trueDate = Date - 1096) %>% 
+  dplyr::filter(model == "PROPHET") %>% 
+  rename(Predicted = Flow) %>% 
+  mutate(Date2 = as.character(trueDate))
+
+past_merge <- elwha_past %>% 
+  rename(Actual = Flow) %>% 
+  mutate(Date2 = as.character(Date))
+
+elwha_join <- inner_join(hindcast_merge, past_merge, by = "Date2") %>% 
+  select(c(Date2, Predicted, Actual)) %>% 
+  rename(Date = Date2)
+
+model_lm<- lm(Predicted ~ Actual, data = elwha_join)
+summary(model_lm)
+
+elwha_join %>% 
+  ggplot(aes(x = Actual, y = Predicted)) + 
+  geom_point()+
+  geom_abline(linetype = 1, color = "black") +
+  geom_smooth(color = "red", method = "lm", formula = (y ~ x)) +
+  theme_linedraw()
+```
+
