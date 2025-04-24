@@ -1,5 +1,5 @@
 ---
-title: ESS330_ProjProposals
+title: Code and Lab 6
 authors:
   - name: Cameron McLaughlin
     affiliation: The University
