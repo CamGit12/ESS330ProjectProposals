@@ -1,0 +1,260 @@
+---
+title: ESS330 Final Project
+authors:
+  - name: Cameron McLaughlin
+    affiliation: Colorado State University
+    roles: writing, data preparation, data analysis
+    corresponding: true
+  - name: Alex Smilor
+    affiliation: Colorado State University
+    roles: writing, data analysis
+    corresponding: false
+bibliography: references.bib
+csl: apa.csl
+format:
+  html:
+    embed-resources: true
+    execute:
+      echo: false
+      warning: false
+      message: false
+    code-fold: true
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+# Post-Dam Removal Trends in Discharge and Turbidity on the Elwha River
+
+### Github: CamGit12/ESS330ProjectProposals
+
+## Abstract
+
+## Introduction
+
+Dams have long been built by humans as a means of protecting human development from flooding, diverting water for crop irrigation or, in modern times, to generate power to meet the growing energy demands of an industrialized world [@ryan2017status].
+In the United States, there are estimated to be over 2 million dams throughout the country, though many of these are small in size and aging [@graf1993sustaining, @ryan2017status].
+Many of the dams in the US are currently over 50 years old and, this age combined with shifts in scientific knowledge and societal values, have promoted the popularity of dam removal as an option for these aging dams [duda2008baseline, @ryan2017status].
+While dam removal is often done for economic reasons, since the cost of repairing dams can be prohibitively expensive, it has also recently gained popularity as a valuable method for restoring riverine ecosystems [duda2008baseline, @ryan2017status].
+For these reasons and more, the US has recently seen the removal of over 1000 dams in recent decades, though the effects of these dam removal on riverine ecosystems generally go unstudied [@ryan2017status].
+
+Though river restoration is often one of the goals of dam removal, especially in recent years, the consequences of dam removal are nuanced, with both benefits and costs that must be considered prior to and following dam removal efforts [@duda2008baseline].
+Dam removal is known to have impacts on the physical and biological properties of river systems, with potential consequences for river health, human health, local economy and biodiversity.
+Removing dams can often serve as an important step in reconnecting riparian habitats, allowing for the flooding of wetlands and creating a more complex and better connected riparian habitat matrix that can benefit some species such as wide ranging terrestrial species and species reliant on the presence of ephemeral water bodies [@bednarek2001undamming].
+Dam removal can also improve the connectivity of aquatic habitats, allowing fish and aquatic invertebrates to travel freely up and downstream, often benefiting migratory fish such as salmon [@bednarek2001undamming].
+Physical properties, such as temperature, are also often affected by dam removal.
+Dams often lead to a decrease in water temperature downstream of the river, since many dams draw water from the cooler depths of their reservoirs [@bednarek2001undamming].
+Removal, therefore, is often an effective method of restoring river water temperatures to their natural state.
+Additionally, sediment transport often changes following dam removal as previously trapped sediment is released.
+However, how sediment transport changes is highly variable, with some streams seeing increases in sediment mobilization immediately following dam removal and others not seeing much mobilization until months following removal [@bednarek2001undamming, @simons1991sediment, @johnson2001kettle].
+
+This project will focus on the sediment flows following one of the largest dam removal projects in the United States.
+The Elwha River, located in northern Washington in Olympic National Park upstream of the Strait of Juan de Fuca, saw the removal of two large dams between 2011 and 2012, which at the time represented the largest dam removal and river restoration project in US history [@duda2011coastal].
+As part of these dam removal projects and to aid in river restoration assessment, extensive monitoring efforts of flow conditions and water quality metrics were undertaken, with the goal of better understanding how dam removal on this scale affects watershed health.
+As a result, a uniquely high amount of research was produced in relation to this project, providing a unique opportunity to study the ongoing effects of such a monumental project [@randle2015large].
+In fact, there were many researchers focused on the geomorphic responses to these dam removals [@mussman2008predicting], but the need for continued analyses to ongoing changes and better understandings of the dynamic impacts to water quality as a result of the dam removal impacts remains.
+
+This project will look to assist in the maintained study of the dual-dam removal on the Elwha River and the water quality dynamics that occurred downstream, specifically by examining the relationship between upstream peak daily discharge and downstream daily turbidity measures.
+Turbidity, or the amount of suspended particles is important to investigate due to the high potential for increased sediment flow following dam removal, which could impact water quality further downstream as massive amounts of sediment are released from behind the dams and bring potentially harmful pollutants with them [@hart2002dam].
+In the case of the Elwha river dams, there was an estimated 19 million m3 of sediment trapped behind both dams combined, making the potential water quality impacts high [@duda2011coastal].
+Beyond the potential water quality impacts, turbidity can also have negative impacts on biota, specifically migratory fish species, with turbidity negatively associated with salmon swimming speed [@lehman2017relationships].
+Given that reconnecting salmon and trout runs was one of the key goals of this project, understanding potential challenges associated with dam removal is important for both achieving project goals and learning how best these effects can be managed [@duda2011coastal].
+
+This project will draw from two data sources, upstream river discharge USGS gauge (Elwha River at Mcdonald BR Near Port Angeles, WA, 12045500) and downstream river water quality USGS gauge (Elwha River at Diversion Near Port Angeles, WA, 12046260).
+The two variables we will be testing against each other will be upstream discharge and downstream turbidity, which we hypothesize will be positively correlated.
+We will also evaluate if there is any overall trend in discharge and turbidity following the dam removal and we hypothesize that there will be a general linear trend in both, with initial increases in both measures following dam removal falling off in the latter years of the study.
+
+## Methods
+
+```{r include=FALSE}
+#Libraries 
+library(dplyr)
+library(lubridate)
+library(dataRetrieval)
+library(tidyr)
+library(ggplot2)
+library(readr)
+library(ggpubr)
+library(tidyverse)
+library(plotly)
+library(tsibble)
+library(forecast)
+library(feasts)
+library(modeltime)
+library(timeSeries)
+library(timetk)
+library(tidymodels)
+library(earth)
+#Clean and Prep
+raw_turbidity <- readNWISuv("12046260", "63682", startDate = "2013-09-18", endDate = "2019-12-19", tz = "UTC")
+
+raw_discharge <- readNWISuv("12045500", "00060", startDate = "2013-09-18", endDate = "2019-12-19", tz = "UTC")
+
+#cleaned
+
+turbidity_clean <- raw_turbidity %>%
+  rename(turbidity_fbu = X_63682_00000) %>% 
+  select(-agency_cd, -site_no, -tz_cd, -X_63682_00000_cd)
+
+discharge_clean <- raw_discharge %>%
+  rename(discharge_cfs = X_00060_00000) %>% 
+    select(-agency_cd, -site_no, -tz_cd, -X_00060_00000_cd)
+
+#join data frames by datetime
+#keep only rows that match 1:1 by datetime
+
+joined_data <- inner_join(discharge_clean, turbidity_clean, by = "dateTime")
+
+```
+
+### Study Site
+
+Our study is focused on the Elwha River, located in Olympic National Park in the state of Washington, where two large dams-the Elwha Dam and Glines Canyon Dam-were removed between 2011 and 2012.
+This project was the largest dam removal and restoration project in US history during the time of removal.
+Our project focuses on the downstream river section below the site of the Glines Canyon dam removal, allowing us to assess sediment transport, both spatially and temporally.
+
+### Data Collection and Processing
+
+We accessed our data from two USGS monitoring stations on the Elwha River; discharge measurements were taken from the McDonald Bridge station (12045500) and turbidity measurements were taken from the Diversion station (12046260).
+Our data timeframe spans September 2013 to December 2019, and our data was retrieved using the USGS dataRetrieval R package.
+
+### Statistical Analysis
+
+Exploratory Data Analysis (EDA): To better understand our dataset of combined time series data, we assessed the distribution of our two parameters via histograms.
+Additionally, we tested for normality using Kolmogorov-Smirnov tests.
+Finally, we plotted our turbidity data yearly as a boxplot, removing the top 10 percent of values in order to remove outliers and better visualize the general trends of our main turbidity data across time (Figure 4).
+We also plotted our yearly median turbidity values in order to assess any general trends in turbidity values across time whilst minimizing the impacts of outliers by opting for median rather than mean values (Figure 5).
+
+Correlation Analysis: We used the Spearman's rank correlation test to examine the relationship between discharge and turbidity, with considerations for the two parameters’ non-normal distributions.
+We also supplemented our analyses with linear regression.
+
+Time Series Analysis: For our time series analyses, we averaged monthly data, since performing time series tests on the whole dataset was too computationally intensive.
+Using seasonal subseries plots, we visualized monthly trends in the data to see if there was a consistent trend or pattern in each month for both turbidity and discharge.
+Additionally, we performed a Loess-based STL decomposition on both variables to identify both seasonal patterns and the overall trend in the data to better allow analysis of our seasonal data.
+Lastly, using the trend component of the STL decompositions for both variables, we calculated a linear regression of the trend as a function of time to determine if there was a change over time.
+
+## Results
+
+### Exploratory Data Analysis
+
+Our initial exploratory data analyses of our discharge and turbidity data illustrated highly variable river conditions.
+Our discharge values, in cubic feet per second (cfs), ranged from 213 to 24,400 cfs (median: 1,140 cfs) (Table 1).
+Additionally, our turbidity measurements ranged from 0 to 4,590 Formazin backscatter units, or FBUs (median: 12.3 FBU) (Table 1).
+This range can be seen in our Figure 1.
+Our distribution histograms demonstrated strong right-skewed data with both parameters, furthering our need for a test for normality (Figure 2, Figure 3).
+In our Kolmogorov-Smirnov tests, this was confirmed in both discharge (D = 0.186, p \< 2.2e-16) and turbidity (D = 0.364, p \< 2.2e-16) (Table 2).
+Finally, our Figure 4 and 5 plots illustrate the basic shape of our turbidity values over the period of record of our dataset.
+Figure 4 illustrates a general declining trend of the turbidity values as time passes post-dam removal, and Figure 5 additionally illustrates how the median turbidity values experienced steep declines.
+
+```{r echo=TRUE}
+plot1 <- ggplot(joined_data, aes(x = dateTime)) +
+  geom_point(aes(y = discharge_cfs, color = "Discharge (cfs)")) +
+  geom_point(aes(y = turbidity_fbu, color = "Turbidity (FBU)")) +scale_y_continuous(name = "Discharge (cfs)", sec.axis = sec_axis(~ ., name = "Turbidity (FBU)")) + scale_x_datetime(date_labels = "%Y", date_breaks = "1 year") +
+  labs(title = "Discharge and Turbidity over Time", x = "Date") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_manual(values = c("Discharge (cfs)" = "blue", "Turbidity (FBU)" = "red")) +
+  theme_minimal()
+print(plot1)
+
+```
+
+Figure 1: Elwha River discharge (cfs) and turbidity (FBU) across period of record 9/2013-12/2019
+
+Table 1: Summary Statistics of Elwha River across period of record 9/2013-12/2019
+
+|  |  |  |  |  |  |  |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| **Variable** | **Min** | **1st Quartile** | **Median** | **Mean** | **3rd Quartile** | **Max** |
+| Discharge (cfs) | 213 | 588 | 1,140 | 1,496 | 1,930 | 24,400 |
+| Turbidity (FBU) | 0.00 | 5.00 | 12.30 | 88.03 | 47 | 4,590 |
+
+```{r echo=TRUE}
+ggplot(joined_data, aes(x = discharge_cfs)) +
+  geom_histogram(binwidth = 100, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Histogram of Discharge (cfs)", x = "Discharge (cfs)", y = "Frequency") +
+  theme_minimal()
+```
+
+Figure 2: Histogram of Discharge (cfs) values for distribution analysis
+
+```{r}
+ggplot(joined_data, aes(x = turbidity_fbu)) +
+  geom_histogram(binwidth = 100, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Histogram of Turbidity (fbu)", x = "Turbidity (fbu)", y = "Frequency") +
+  theme_minimal()
+```
+
+Figure 3: Histogram of Turbidity (FBU) values for distribution analysis
+
+Table 2: Discharge and turbidity results of Kolmogorov-Smirnov tests
+
+|                 |                 |             |               |
+|-----------------|-----------------|-------------|---------------|
+| **Variable**    | **D Statistic** | **p-value** | **Normality** |
+| Discharge (cfs) | 0.186           | \< 2.2e-16  | Non-normal    |
+| Turbidity (FBU) | 0.364           | \< 2.2e-16  | Non-normal    |
+
+![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdPM7D4i-pCeTvVemOOtB6BqirvRk_RMZGfopO6F6JqUfw4Pu-xVZ5jq_Wsp1cdDJ3HEyn6SbVQ4to3qTyxyiOn7ZWPOYmz-wyt1wrm_NjXUuQYVuigVi-8T66LJq1ZgCJg5uEJ5A?key=gXhPsSmYERyh7-oRe43254aO)
+
+Figure 4: Filtered annual turbidity data by year for Elwha River below Glines Canyon Dam site
+
+![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfx2ixEBWkThwgh3_3aZhznrD4p3339hKPVlSkw3lApvgaW9zqtGaMDbvOyCT-nINImz3MbbUOK5S0dRIyTKsIXq8sui6hRVEpFcuyDHn77OA1CuK2F0lmd2UeF_pDefamyMpHQjQ?key=gXhPsSmYERyh7-oRe43254aO)
+
+Figure 5: Annual median turbidity values by year for Elwha River below Glines Canyon Dam site
+
+### Correlation Analysis
+
+In order to assess the correlation relationship between our two parameters, we utilized a Spearman's rank correlation test. This test, effective on non-normally distributed data, indicated a moderately strong positive relationship between discharge and turbidity (ρ = 0.598, p \< 2.2e-16). To further this analysis, we investigated with a linear regression, which only further confirmed this relationship, resulting in a 2.451 coefficient for turbidity. This indicates that for each FBU unit increase in turbidity, discharge (instantaneous streamflow) increases by about 2.45 cfs.
+
+### Temporal Analysis
+
+To investigate the monthly patterns in our dataset, we implemented monthly subseries plots. Additionally, the STL decomposition separated these seasonal elements from underlying trends and residual components. In order to further analyze this, our linear regression indicated:
+
+1.  A slight but statistically significant negative trend in discharge over the study period (coefficient = -0.145, p = 0.0049, R² = 0.102)
+
+2.  A stronger and statistically significant negative trend in turbidity (coefficient = -0.085, p \< 2.2e-16, R² = 0.601)
+
+These results indicate a slow but statistically significant reduction in suspended sediment loads in the years following dam removal, while discharge showed a much slighter declining trend that was also statistically significant. Ultimately we can be confident in our findings due to our good p-values, but understand that our explanatory power is very low for discharge and higher but still below a standard .8 or .9 threshold for a very good R value that would allow for very high explanatory power of our parameters by our R-squared value. 
+
+```{r, include=FALSE}
+monthdata <- joined_data %>% 
+  mutate(Date = yearmonth(dateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(discharge_cfs = mean(discharge_cfs),
+            turbidity_fbu = mean(turbidity_fbu))
+
+elwha_tbl <- as_tsibble(monthdata)
+
+flow_decomp <- elwha_tbl %>% 
+model(STL(discharge_cfs ~ season(window = 12))) %>% 
+  components()
+
+turbid_decomp <- elwha_tbl %>% 
+model(STL(turbidity_fbu ~ season(window = 12))) %>% 
+  components()
+```
+
+```{r}
+autoplot(flow_decomp) +
+  labs(title = "STL Decomposition of Flow", y = "Cubic Feet per Second") +
+  theme_minimal()
+```
+
+Figure 5: A decomposition plot of the discharge time series, showing the observed monthly discharge data (discharge_cfs), the calculated monthly trend in discharge (trend), the seasonality in the data calculated with a 12-month window (season_year), and the remaining elements of the data, representing randomness in the dataset (remainder).
+
+```{r}
+autoplot(turbid_decomp) +
+  labs(title = "STL Decomposition of Turbidity", y = "FBU") +
+  theme_minimal()
+```
+
+Figure 6: A decomposition plot of the turbidity time series, showing the observed monthly turbidity data (turbidity_fbu), the calculated monthly trend in turbidity (trend), the seasonality in the data calculated with a 12-month window (season_year), and the remaining elements of the data, representing randomness in the dataset (remainder).
+
+## Discussion
+Our project analyzing the spatial and temporal context in the relationship between discharge (cfs) and turbidity (fbu) in the Elwha River below the Glines Canyon Dam removal site highlighted some key trends in sediment transport post-dam removal. Our findings of a statistically significant positive correlation between discharge and turbidity suggested, as one would likely expect, that higher streamflows increase the suspended sediments in the Elwha River. This response is common in streams and well understood, but a good baseline to draw when a large and historic event has mobilized such vast amounts of sediments from the reservoir above this stream. Additionally, in looking at our median turbidity plot (Figure 4) as well as the decomposition plot (Figure 6), we can find a stabilizing trend in the transport of suspended sediments downstream as time passes since the dam was removed. This finding contributes to and aligns with general sediment transport theory and what would be expected post-dam removal. 
+
+Despite our results' significance and alignment with basic expectations of the river system’s response to this historic event, our study does have limitations. Our scope of spatial analyses is quite small, restricted to just the two USGS monitoring stations, which limits our ability to assess the spatial effects of this event across the whole downstream section of this river below the dam and all the way to the Strait of Juan de Fuca in Washington State. Additionally, our dataset is limited to only a post-removal period, without the ability to understand the streamflow dynamics and historic sediment flows with the reservoir and dam in place. Further, our analyses did not investigate any changes in the relationship between discharge and turbidity across time or space. 
+
+Further research and investigations should include insight into local spatial trends, as well as some form of hindcasting in order to better understand how this system might have looked prior to removal and how this historic event changed the hydrologic and geomorphic regime of the Elwha River. Finally, investigations into changes in the relationship between discharge and turbidity, either spatially or temporally, could also assist in the understanding of how this dam removal altered this critical physical water relationship.
+
+
