@@ -1,5 +1,5 @@
 ---
-title: ESS330_ProjProposals
+title: Code and Lab 6
 authors:
   - name: Cameron McLaughlin
     affiliation: The University
@@ -18,6 +18,7 @@ format:
       echo: true
       warning: false
       message: false
+    code-fold: true
 ---
 
 # Lab 7 Project Kickoff
@@ -28,13 +29,13 @@ format:
 
 ### Introduction, Background, Motivation
 
-Dams have long been built by humans as a means of protecting human development from flooding, diverting water for crop irrigation or, in modern times, to generate power to meet the growing energy demands of an industrialized world [@ryanbellmore_2016_status]. In the United States, there are estimated to be over 2 million dams throughout the country, though many of these are small in size and aging [@graf1993sustaining, @ryanbellmore_2016_status]. Many of the dams in the US are currently over 50 years old and, this age combined with shifts in scientific knowledge and societal values, have promoted the popularity of dam removal as an option for these aging dams [duda2008baseline, @ryanbellmore_2016_status]. While dam removal is often done for economic reasons, since the cost of repairing dams can be prohibitively expensive, it has also recently gained popularity as a valuable method for restoring riverine ecosystems [duda2008baseline, @ryanbellmore_2016_status]. For these reasons and more, the US has recently seen the removal of over 1000 dams in recent decades, though the effects of these dam removal on riverine ecosystems generally go unstudied [@ryanbellmore_2016_status].
+Dams have long been built by humans as a means of protecting human development from flooding, diverting water for crop irrigation or, in modern times, to generate power to meet the growing energy demands of an industrialized world [@ryan2017status]. In the United States, there are estimated to be over 2 million dams throughout the country, though many of these are small in size and aging [@graf1993sustaining, @ryan2017status]. Many of the dams in the US are currently over 50 years old and, this age combined with shifts in scientific knowledge and societal values, have promoted the popularity of dam removal as an option for these aging dams [duda2008baseline, @ryan2017status]. While dam removal is often done for economic reasons, since the cost of repairing dams can be prohibitively expensive, it has also recently gained popularity as a valuable method for restoring riverine ecosystems [duda2008baseline, @ryan2017status]. For these reasons and more, the US has recently seen the removal of over 1000 dams in recent decades, though the effects of these dam removal on riverine ecosystems generally go unstudied [@ryan2017status].
 
 Though river restoration is often one of the goals of dam removal, especially in recent years, the consequences of dam removal are nuanced, with both benefits and costs that must be considered prior to and following dam removal efforts [@duda2008baseline]. Dam removal is known to have impacts on the physical and biological properties of river systems, with potential consequences for river health, human health, local economy and biodiversity. Removing dams can often serve as an important step in reconnecting riparian habitats, allowing for the flooding of wetlands and creating a more complex and better connected riparian habitat matrix that can benefit some species such as wide ranging terrestrial species and species reliant on the presence of ephemeral water bodies [@bednarek2001undamming]. Dam removal can also improve the connectivity of aquatic habitats, allowing fish and aquatic invertebrates to travel freely up and downstream, often benefiting migratory fish such as salmon [@bednarek2001undamming]. Physical properties, such as temperature, are also often affected by dam removal. Dams often lead to a decrease in water temperature downstream of the river, since many dams draw water from the cooler depths of their reservoirs [@bednarek2001undamming]. Removal, therefore, is often an effective method of restoring river water temperatures to their natural state. Additionally, sediment transport often changes following dam removal as previously trapped sediment is released. However, how sediment transport changes is highly variable, with some streams seeing increases in sediment mobilization immediately following dam removal and others not seeing much mobilization until months following removal [@bednarek2001undamming, @simons1991sediment, @johnson2001kettle].
 
-This project will focus on the sediment flows following one of the largest dam removal projects in the United States. The Elwha River, located in northern Washington in Olympic National Park upstream of the Strait of Juan de Fuca, saw the removal of two large dams between 2011 and 2012, which at the time represented the largest dam removal and river restoration project in US history [@duda2011coastal]. As part of these dam removal projects and to aid in river restoration assessment, extensive monitoring efforts of flow conditions and water quality metrics were undertaken, with the goal of better understanding how dam removal on this scale affects watershed health. As a result, a uniquely high amount of research was produced in relation to this project, providing a unique opportunity to study the ongoing effects of such a monumental project [@RANDLE2015709]. In fact, there were many researchers focused on the geomorphic responses to these dam removals [@10.3955/0029-344X-82.S.I.236], but the need for continued analyses to ongoing changes and better understandings of the dynamic impacts to water quality as a result of the dam removal impacts remains.
+This project will focus on the sediment flows following one of the largest dam removal projects in the United States. The Elwha River, located in northern Washington in Olympic National Park upstream of the Strait of Juan de Fuca, saw the removal of two large dams between 2011 and 2012, which at the time represented the largest dam removal and river restoration project in US history [@duda2011coastal]. As part of these dam removal projects and to aid in river restoration assessment, extensive monitoring efforts of flow conditions and water quality metrics were undertaken, with the goal of better understanding how dam removal on this scale affects watershed health. As a result, a uniquely high amount of research was produced in relation to this project, providing a unique opportunity to study the ongoing effects of such a monumental project [@randle2015large]. In fact, there were many researchers focused on the geomorphic responses to these dam removals [@mussman2008predicting], but the need for continued analyses to ongoing changes and better understandings of the dynamic impacts to water quality as a result of the dam removal impacts remains.
 
-This project will look to assist in the maintained study of the dual-dam removal on the Elwha River and the water quality dynamics that occurred downstream, specifically by examining the relationship between upstream peak daily discharge and downstream daily turbidity measures. Turbidity, or the amount of suspended particles is important to investigate due to the high potential for increased sediment flow following dam removal, which could impact water quality further downstream as massive amounts of sediment are released from behind the dams and bring potentially harmful pollutants with them [@hart2002dam]. In the case of the Elwha river dams, there was an estimated 19 million m3 of sediment trapped behind both dams combined, making the potential water quality impacts high [@duda2011coastal]. Beyond the potential water quality impacts, turbidity can also have negative impacts on biota, specifically migratory fish species, with turbidity negatively associated with salmon swimming speed [@lehman_2017_relationships]. Given that reconnecting salmon and trout runs was one of the key goals of this project, understanding potential challenges associated with dam removal is important for both achieving project goals and learning how best these effects can be managed [@duda2011coastal].
+This project will look to assist in the maintained study of the dual-dam removal on the Elwha River and the water quality dynamics that occurred downstream, specifically by examining the relationship between upstream peak daily discharge and downstream daily turbidity measures. Turbidity, or the amount of suspended particles is important to investigate due to the high potential for increased sediment flow following dam removal, which could impact water quality further downstream as massive amounts of sediment are released from behind the dams and bring potentially harmful pollutants with them [@hart2002dam]. In the case of the Elwha river dams, there was an estimated 19 million m3 of sediment trapped behind both dams combined, making the potential water quality impacts high [@duda2011coastal]. Beyond the potential water quality impacts, turbidity can also have negative impacts on biota, specifically migratory fish species, with turbidity negatively associated with salmon swimming speed [@lehman2017relationships]. Given that reconnecting salmon and trout runs was one of the key goals of this project, understanding potential challenges associated with dam removal is important for both achieving project goals and learning how best these effects can be managed [@duda2011coastal].
 
 This project will draw from two data sources, upstream river discharge USGS gauge (Elwha River at Mcdonald BR Near Port Angeles, WA, 12045500) and downstream river water quality USGS gauge (Elwha River at Diversion Near Port Angeles, WA, 12046260). The two variables we will be testing against each other will be Daily Peak Discharge and Daily Peak Turbidity. To test whether or not there is a relationship between these two variables, we will use a Kolmogorov-Smirnov test, since our dataset is not normally distributed and the data set is large [@mishra2019descriptive].
 
@@ -53,6 +54,14 @@ library(readr)
 library(ggpubr)
 library(tidyverse)
 library(plotly)
+library(tsibble)
+library(forecast)
+library(feasts)
+library(modeltime)
+library(timeSeries)
+library(timetk)
+library(tidymodels)
+library(earth)
 ```
 
 ### Clean and Prep Data
@@ -69,7 +78,7 @@ turbidity_clean <- raw_turbidity %>%
   rename(turbidity_fbu = X_63682_00000) %>% 
   select(-agency_cd, -site_no, -tz_cd, -X_63682_00000_cd)
 
-  discharge_clean <- raw_discharge %>%
+discharge_clean <- raw_discharge %>%
   rename(discharge_cfs = X_00060_00000) %>% 
     select(-agency_cd, -site_no, -tz_cd, -X_00060_00000_cd)
 
@@ -91,7 +100,7 @@ plot1 <- ggplot(joined_data, aes(x = dateTime)) +
   labs(title = "Discharge and Turbidity over Time", x = "Date") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_color_manual(values = c("Discharge (cfs)" = "blue", "Turbidity (FBU)" = "red")) +
-  theme(legend.title=element_blank())
+  theme_minimal()
 
 print(plot1)
 
@@ -151,3 +160,193 @@ For our final investigations into our data, we have ran initial tests for correl
 5.) What are some potential challenges you see in the methods? One challenge we have already found when investigating our data initially is that we have pairs in our data that is complicating our Spearman's rank correlation test. This has caused problems because it complicates the Spearman's correlation resulting p value into a estimation. In this way, we may need to find a different correlation method to use if this is a big enough issue.
 
 6.) How do the selected methods help you get to your final goal? Ultimately our selected methods allow us to get further by describing and enlightening the relationship between discharge and turbidity levels in the Elwha River specifically below the Glines Canyon Dam Removal site. The analyses and plans we have will allow us to investigate how the relationship works, how it has changed, and how time has impacted this relationship post-dam removal.
+
+## Methods
+
+### Decomposition
+
+```{r}
+monthdata <- joined_data %>% 
+  mutate(Date = yearmonth(dateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(discharge_cfs = mean(discharge_cfs),
+            turbidity_fbu = mean(turbidity_fbu))
+
+elwha_tbl <- as_tsibble(monthdata)
+
+elwha_tsplot <- elwha_tbl %>% 
+  ggplot(aes(x = Date)) +
+  geom_line(aes(y = discharge_cfs, color = "Discharge")) +
+  geom_line(aes(y = turbidity_fbu, color = "Turbidity")) +
+  scale_y_continuous(name = "Discharge (cfs)", sec.axis = sec_axis(~ ., name = "Turbidity (FBU)")) + 
+  labs(
+    color = "",
+    x = "Date"
+  )
+
+ggplotly(elwha_tsplot)
+
+gg_subseries(elwha_tbl, y = turbidity_fbu)+
+  labs(title = "Monthly Turbity Patterns", y = "Turbidity (FBU)", x = "Year") + 
+  theme_minimal()
+
+gg_subseries(elwha_tbl, y = discharge_cfs)+
+  labs(title = "Monthly Flow Patterns", y = "Discharge (CFS)", x = "Year") + 
+  theme_minimal()
+
+flow_decomp <- elwha_tbl %>% 
+model(STL(discharge_cfs ~ season(window = 12))) %>% 
+  components()
+
+turbid_decomp <- elwha_tbl %>% 
+model(STL(turbidity_fbu ~ season(window = 12))) %>% 
+  components()
+
+autoplot(flow_decomp) +
+  labs(title = "STL Decomposition of Flow", y = "Cubic Feet per Second") +
+  theme_minimal()
+
+autoplot(turbid_decomp) +
+  labs(title = "STL Decomposition of Turbidity", y = "FBU") +
+  theme_minimal()
+
+flow_lm<- lm(trend ~ Date, data = flow_decomp)
+summary(flow_lm)
+
+ggplot(flow_decomp, aes(x = Date, y = trend)) +
+  geom_point() + 
+  geom_smooth(color = "red", method = "lm", formula = (y ~ x)) +
+  theme_minimal() + 
+  labs(
+    x = "Date",
+    y = "Discharge Trend (cfs)"
+  )
+  
+turbid_lm<- lm(trend ~ Date, data = turbid_decomp)
+summary(turbid_lm)
+
+ggplot(turbid_decomp, aes(x = Date, y = trend)) +
+  geom_point() + 
+  geom_smooth(color = "red", method = "lm", formula = (y ~ x)) +
+  theme_minimal() + 
+  labs(
+    x = "Date",
+    y = "Turbidity Trend (fbu)"
+  )
+```
+
+### Attempted Hindcasting
+
+```{r}
+#Reversing dataset to facilitate hindcasting. Basic plan is to just flip the data to forecast backwards
+hindcast<- discharge_clean
+
+#hindcast$dateTime <- rev(hindcast$dateTime) #Don't use, might not be needed
+hindcast$discharge_cfs <- rev(hindcast$discharge_cfs) #reverses discharge data
+#hindcast$turbidity_fbu <- rev(hindcast$turbidity_fbu) #reverses turbidity date
+
+hindcast_daily <- hindcast %>% 
+  mutate(Date = date(dateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(Flow = mean(discharge_cfs))
+
+#Modeling Prep
+set.seed(100)
+ts_tbl <-  tsibble::as_tsibble(hindcast_daily) |> 
+  as_tibble()
+
+splits <- time_series_split(ts_tbl, assess = "36 months", cumulative = TRUE)
+
+training <-  training(splits)
+testing  <-  testing(splits)
+
+mods <- list(
+  prophet_boost(seasonality_daily = TRUE) |> set_engine("prophet_xgboost")
+)
+
+dis_models <- map(mods, ~ fit(.x, Flow ~ Date, data = training))
+
+
+(dis_models_tbl <- as_modeltime_table(dis_models))
+
+(calibration_table <- modeltime_calibrate(dis_models_tbl, testing, quiet = FALSE))
+
+modeltime_accuracy(calibration_table) |> 
+  arrange(mae)
+
+(forecast <- calibration_table  |> 
+  modeltime_forecast(h = "36 months", 
+                     new_data = testing,
+                     actual_data = ts_tbl))
+plot_modeltime_forecast(forecast)
+
+refit_tbl <- calibration_table |>
+    modeltime_refit(data = ts_tbl)
+
+refit_tbl |>
+    modeltime_forecast(h = "36 months", actual_data = ts_tbl) |>
+    plot_modeltime_forecast()
+
+refit_forecast <- refit_tbl |>
+    modeltime_forecast(h = "36 months", actual_data = ts_tbl)
+
+elwha_past <- readNWISuv("12045500", "00060", startDate = "2010-09-18", endDate = "2019-12-19", tz = "UTC") %>% 
+  rename(Flow = X_00060_00000, Date = dateTime) %>% 
+  mutate(Date = date(Date)) |>                   
+  group_by(Date) |>                                   
+  summarise(Flow = mean(Flow))
+
+forecast2 <- rename(refit_forecast, Date = .index)
+forecast2 <- rename(forecast2, Flow = .value)
+
+rev_hindcast <- forecast2 %>%
+  group_by(Date) %>% 
+  summarise(Flow = Flow)
+
+rev_hindcast$Flow <- rev(rev_hindcast$Flow)
+  
+rev_hindcast <- rev_hindcast %>% 
+  mutate(trueDate = Date - 1096)
+
+
+ggplot() +
+  geom_line(data = rev_hindcast, aes(x=trueDate, y = Flow, color = "Predicted")) +
+  geom_line(data = elwha_past, aes(x=Date, y = Flow, color = "Actual")) + 
+  theme_minimal() + 
+  labs(
+    x = "Month",
+    y = "Flow (Cubic Feet per Second)",
+    color = ""
+  )
+
+hindcast_plot <- forecast2 %>%
+  select(.model_desc,Flow,Date) %>% 
+  rename(model = .model_desc)
+
+hindcast_plot$Flow <- rev(hindcast_plot$Flow)
+hindcast_plot$model <- rev(hindcast_plot$model)
+
+hindcast_merge <- hindcast_plot %>% 
+  mutate(trueDate = Date - 1096) %>% 
+  dplyr::filter(model == "PROPHET") %>% 
+  rename(Predicted = Flow) %>% 
+  mutate(Date2 = as.character(trueDate))
+
+past_merge <- elwha_past %>% 
+  rename(Actual = Flow) %>% 
+  mutate(Date2 = as.character(Date))
+
+elwha_join <- inner_join(hindcast_merge, past_merge, by = "Date2") %>% 
+  select(c(Date2, Predicted, Actual)) %>% 
+  rename(Date = Date2)
+
+model_lm<- lm(Predicted ~ Actual, data = elwha_join)
+summary(model_lm)
+
+elwha_join %>% 
+  ggplot(aes(x = Actual, y = Predicted)) + 
+  geom_point()+
+  geom_abline(linetype = 1, color = "black") +
+  geom_smooth(color = "red", method = "lm", formula = (y ~ x)) +
+  theme_linedraw()
+```
