@@ -6,7 +6,7 @@ authors:
     roles: writing, data preparation, data analysis
     corresponding: true
   - name: Alex Smilor
-    affiliation: The University
+    affiliation: Colorado State University
     roles: writing, data analysis
     corresponding: false
 bibliography: references.bib
@@ -29,6 +29,8 @@ editor:
 ### Github: CamGit12/ESS330ProjectProposals
 
 ## Abstract
+Dam removal has rapidly become a commonplace practice in the United States as infrastructure ages and the cost of replacement grows. This research investigates the effects of dam removal on streamflow and water quality in the Elwha River, WA, where two dams were removed between 2011 and 2012. This study used USGS river monitoring gauges along the Elwha River to examine trends in both turbidity and discharge following the removal of the dams. We found that there was a strong negative trend in turbidity in the 6 years following the dam removal and a weaker, but still significant, negative trend in discharge. These findings support other research that has suggested there is often an increase in sediment load following dam removal, followed by eventual stabilization.
+
 
 ## Introduction
 
