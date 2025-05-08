@@ -213,21 +213,46 @@ autoplot(turbid_decomp) +
 flow_lm<- lm(trend ~ Date, data = flow_decomp)
 summary(flow_lm)
 
-ggplot(flow_decomp, aes(x = Date, y = trend)) +
-  geom_point() + 
-  geom_smooth(color = "red", method = "lm", formula = (y ~ x)) +
-  theme_minimal() + 
+flowtrend <- ggplot(flow_decomp, aes(x = Date, y = trend)) +
+  geom_line() + 
+  geom_smooth(color = "white", method = "lm", formula = (y ~ x)) + 
+  theme(
+    panel.background = element_rect(fill='transparent'),
+    plot.background = element_rect(fill='transparent', color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "white")
+  ) +
   labs(
     x = "Date",
     y = "Discharge Trend (cfs)"
   )
   
+ggsave("imgs/flowtrend.png", flowtrend, bg = "transparent")
+
+flowseason <- ggplot(flow_decomp, aes(x = Date, y = season_year)) +
+  geom_line() + 
+  theme(
+    panel.background = element_rect(fill='transparent'),
+    plot.background = element_rect(fill='transparent', color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "white")
+  ) +
+  labs(
+    x = "Date",
+    y = "Discharge Seasonality (cfs)"
+  )
+
+ggsave("imgs/flowseason.png", flowseason, bg = "transparent")
+
+
 turbid_lm<- lm(trend ~ Date, data = turbid_decomp)
 summary(turbid_lm)
 
 ggplot(turbid_decomp, aes(x = Date, y = trend)) +
   geom_point() + 
-  geom_smooth(color = "red", method = "lm", formula = (y ~ x)) +
+  geom_smooth(color = "white", method = "lm", formula = (y ~ x)) +
   theme_minimal() + 
   labs(
     x = "Date",
